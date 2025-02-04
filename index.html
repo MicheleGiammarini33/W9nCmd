@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt dei comandi</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: Consolas, monospace;
+            padding: 10px;
+            margin: 0;
+        }
+        #cmd {
+            width: 100%;
+            height: 90vh;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        #input-line {
+            display: flex;
+        }
+        #cmd-input {
+            background: none;
+            border: none;
+            color: lime;
+            font-family: Consolas, monospace;
+            outline: none;
+            width: 100%;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="cmd">
+        Microsoft Windows [Version 10.0.22000.1]  
+        (c) Microsoft Corporation. Tutti i diritti riservati.  
+        <br>
+        C:\Users\Utente>
+        <span id="cmd-output"></span>
+        <div id="input-line">
+            C:\Users\Utente><input type="text" id="cmd-input" autofocus>
+            <span class="blink">█</span>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("cmd-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                let input = this.value.trim();
+                let outputDiv = document.getElementById("cmd");
+                let newLine = document.createElement("div");
+                newLine.innerHTML = "C:\\Users\\Utente> " + input;
+
+                let response = document.createElement("div");
+                response.innerHTML = interpretCommand(input);
+
+                outputDiv.insertBefore(newLine, this.parentElement);
+                outputDiv.insertBefore(response, this.parentElement);
+
+                this.value = "";
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        });
+
+        function interpretCommand(cmd) {
+            switch (cmd.toLowerCase()) {
+                case "dir":
+                    return " Volume in drive C is Windows\n Directory of C:\\Users\\Utente\n\n [Fake Dir Output]\n";
+                case "cls":
+                    document.getElementById("cmd").innerHTML = "Microsoft Windows [Version 10.0.22000.1]  \n(c) Microsoft Corporation. Tutti i diritti riservati.\n\nC:\\Users\\Utente>";
+                    return "";
+                case "exit":
+                    return "Chiusura del prompt...";
+                default:
+                    return "Comando non riconosciuto: " + cmd;
+            }
+        }
+    </script>
+</body>
+</html>
