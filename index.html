@@ -17,9 +17,12 @@
             height: 90vh;
             overflow-y: auto;
             white-space: pre-wrap;
+            border: 1px solid lime;
+            padding: 10px;
         }
         #input-line {
             display: flex;
+            align-items: center;
         }
         #cmd-input {
             background: none;
@@ -27,7 +30,7 @@
             color: lime;
             font-family: Consolas, monospace;
             outline: none;
-            width: 100%;
+            width: calc(100% - 10px);
         }
         .blink {
             animation: blink 1s infinite;
@@ -42,16 +45,13 @@
         Microsoft Windows [Version 10.0.22000.1]  
         (c) Microsoft Corporation. All rights reserved.  
         <br>
-        C:\Users\User>
-        <span id="cmd-output"></span>
         <div id="input-line">
-            C:\Users\User><input type="text" id="cmd-input" autofocus>
-            <span class="blink">█</span>
+            <span>C:\Users\User></span><input type="text" id="cmd-input" autofocus><span class="blink">█</span>
         </div>
     </div>
 
     <script>
-        document.getElementById("cmd-input").addEventListener("keypress", function(event) {
+        document.getElementById("cmd-input").addEventListener("keypress", async function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
                 let input = this.value.trim();
@@ -60,7 +60,7 @@
                 newLine.innerHTML = "C:\\Users\\User> " + input;
 
                 let response = document.createElement("div");
-                response.innerHTML = interpretCommand(input);
+                response.innerHTML = await interpretCommand(input);
 
                 outputDiv.insertBefore(newLine, this.parentElement);
                 outputDiv.insertBefore(response, this.parentElement);
@@ -70,7 +70,7 @@
             }
         });
 
-        function interpretCommand(cmd) {
+        async function interpretCommand(cmd) {
             switch (cmd.toLowerCase()) {
                 case "dir":
                     return " Volume in drive C is Windows\n Directory of C:\\Users\\User\n\n [Fake Dir Output]\n";
@@ -79,10 +79,18 @@
                     return "";
                 case "exit":
                     return "Closing command prompt...";
-                case "michele":
-                    return "Generated HTML code:\n&lt;a href='https://www.google.com' target='_blank'&gt;Go to Google&lt;/a&gt;";
                 default:
-                    return "Command not recognized: " + cmd;
+                    return await fetchOnlineCommand(cmd);
+            }
+        }
+
+        async function fetchOnlineCommand(cmd) {
+            try {
+                let response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(cmd)}&format=json`);
+                let data = await response.json();
+                return data.AbstractText || `No online result for: ${cmd}`;
+            } catch (error) {
+                return "Error fetching online response.";
             }
         }
     </script>
