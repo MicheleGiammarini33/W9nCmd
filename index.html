@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt dei comandi</title>
+    <title>Command Prompt</title>
     <style>
         body {
             background-color: black;
@@ -40,12 +40,12 @@
 <body>
     <div id="cmd">
         Microsoft Windows [Version 10.0.22000.1]  
-        (c) Microsoft Corporation. Tutti i diritti riservati.  
+        (c) Microsoft Corporation. All rights reserved.  
         <br>
-        C:\Users\Utente>
+        C:\Users\User>
         <span id="cmd-output"></span>
         <div id="input-line">
-            C:\Users\Utente><input type="text" id="cmd-input" autofocus>
+            C:\Users\User><input type="text" id="cmd-input" autofocus>
             <span class="blink">█</span>
         </div>
     </div>
@@ -57,7 +57,7 @@
                 let input = this.value.trim();
                 let outputDiv = document.getElementById("cmd");
                 let newLine = document.createElement("div");
-                newLine.innerHTML = "C:\\Users\\Utente> " + input;
+                newLine.innerHTML = "C:\\Users\\User> " + input;
 
                 let response = document.createElement("div");
                 response.innerHTML = interpretCommand(input);
@@ -73,14 +73,16 @@
         function interpretCommand(cmd) {
             switch (cmd.toLowerCase()) {
                 case "dir":
-                    return " Volume in drive C is Windows\n Directory of C:\\Users\\Utente\n\n [Fake Dir Output]\n";
+                    return " Volume in drive C is Windows\n Directory of C:\\Users\\User\n\n [Fake Dir Output]\n";
                 case "cls":
-                    document.getElementById("cmd").innerHTML = "Microsoft Windows [Version 10.0.22000.1]  \n(c) Microsoft Corporation. Tutti i diritti riservati.\n\nC:\\Users\\Utente>";
+                    document.getElementById("cmd").innerHTML = "Microsoft Windows [Version 10.0.22000.1]  \n(c) Microsoft Corporation. All rights reserved.\n\nC:\\Users\\User>";
                     return "";
                 case "exit":
-                    return "Chiusura del prompt...";
+                    return "Closing command prompt...";
+                case "michele":
+                    return "Generated HTML code:\n&lt;a href='https://www.google.com' target='_blank'&gt;Go to Google&lt;/a&gt;";
                 default:
-                    return "Comando non riconosciuto: " + cmd;
+                    return "Command not recognized: " + cmd;
             }
         }
     </script>
